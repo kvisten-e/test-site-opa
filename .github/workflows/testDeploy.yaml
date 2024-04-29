@@ -16,8 +16,7 @@ jobs:
         username: ${{ secrets.USER }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: / 
-          cd /var/www
+        script: |
+          cd /var/www/test-site-opa
           git pull
-          npm install
-          npm run
+
