@@ -1,42 +1,40 @@
 name: Test Deploy
 
-on: 
+on:
   push:
+    branches: ["main", "dev"]
+  pull_request:
     branches: ["main"]
 
 jobs:
-
   cypress_tests:
-    runs-on:
-      ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Node.js
         uses: actions/setup-node@v4
-        with: 
+        with:
           node-version: "20"
       - name: Install dependencies
         run: npm ci
       - name: Start the server
         run: nohup npm run start & #nohop låser inte terminalen vid ett kommando,
       - name: Install Cypress dependencies
-        run: cd ./cypress && npm ci 
+        run: cd ./cypress && npm ci
       - name: Cypress run
         run: npm run test
-          
-  deploy: 
-    needs: cypress_tests
-    runs-on: 
-      ubuntu-latest
-    steps:
-    - name: Doing a deploy
-      uses: appleboy/ssh-action@v0.1.10
-      with: 
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
-        script: |
-          cd /var/www/test-site-opa
-          git pull
 
+  deploy:
+    needs: cypress_tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Doing a deploy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /var/www/test-site-opa
+            git pull
