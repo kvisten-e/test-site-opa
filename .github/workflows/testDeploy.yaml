@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Start the server
-        run: nohop npm run start & #nohop låser inte terminalen vid ett kommando,
+        run: nohup npm run start & #nohop låser inte terminalen vid ett kommando,
       - name: Install Cypress dependencies
         run: cd ./cypress && npm ci 
       - name: Cypress run
